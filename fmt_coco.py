@@ -3,11 +3,8 @@
 @contact: koheitech001[at]gmail.com
 """
 
-import json
-import numpy as np
-
-
 import os
+import json
 import numpy as np
 
 
@@ -108,17 +105,39 @@ def get_license_coco():
            {'url': 'http://flickr.com/commons/usage/', 'id': 7, 'name': 'No known copyright restrictions'}, 
            {'url': 'http://www.usa.gov/copyright.shtml', 'id': 8, 'name': 'United States Government Work'}]
     return ret 
+    
+def make_coco_categories():
 
-
-#def make_coco_categories():
-def make_coco_categories(path_coco2017_val):
-
-    #path_coco2017_val = "/data/public_data/COCO2017/annotations/instances_val2017.json"
+    path_coco2017_val = "/data/public_data/COCO2017/annotations/instances_val2017.json"
     anns_list_coco2017_val = json.load(open(path_coco2017_val, 'r'))
     return anns_list_coco2017_val["categories"]
 
 
-def make_coco_images(imgid, fn, height, width):
+def make_coco_images(path_root, fname_list):
+    """
+    """
+
+    from skimage import io
+
+    imgid = 0
+    #imgid_list = range(len(fname_list))
+    coco_image = list()
+    for fname in fname_list:
+
+        path = path_root + fname
+        try:
+            img = io.imread(path)
+        except OSError as e:
+            print("Exception Raised", e)
+            continue
+
+        coco_image += make_coco_image(imgid, fname, img.shape[0], img.shape[1])
+        imgid += 1
+
+    return coco_image
+
+
+def make_coco_image(imgid, fn, height, width):
     
     temp = {
         "license": 4,
