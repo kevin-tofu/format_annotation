@@ -106,9 +106,9 @@ def get_license_coco():
            {'url': 'http://www.usa.gov/copyright.shtml', 'id': 8, 'name': 'United States Government Work'}]
     return ret 
     
-def make_coco_categories():
+def make_coco_categories(path_coco2017_val):
 
-    path_coco2017_val = "/data/public_data/COCO2017/annotations/instances_val2017.json"
+    #path_coco2017_val = "/data/public_data/COCO2017/annotations/instances_val2017.json"
     anns_list_coco2017_val = json.load(open(path_coco2017_val, 'r'))
     return anns_list_coco2017_val["categories"]
 
