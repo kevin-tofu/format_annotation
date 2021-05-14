@@ -142,7 +142,7 @@ def get_images_coco(path_root, coco_image):
     """
 
     from skimage import io
-    coco_image = list()
+    image_list = list()
     for ci in coco_image:
 
         path = path_root + ci["file_name"]
@@ -152,9 +152,9 @@ def get_images_coco(path_root, coco_image):
             print("Exception Raised", e)
             continue
 
-        coco_image.append(img)
+        image_list.append(img)
 
-    return coco_image
+    return image_list
 
 
 def make_coco_image(imgid, fn, height, width):
