@@ -137,6 +137,26 @@ def make_coco_images(path_root, fname_list):
     return coco_image
 
 
+def get_images_coco(path_root, coco_image):
+    """
+    """
+
+    from skimage import io
+    coco_image = list()
+    for ci in coco_image:
+
+        path = path_root + ci["file_name"]
+        try:
+            img = io.imread(path)
+        except OSError as e:
+            print("Exception Raised", e)
+            continue
+
+        coco_image.append(img)
+
+    return coco_image
+
+
 def make_coco_image(imgid, fn, height, width):
     
     temp = {
