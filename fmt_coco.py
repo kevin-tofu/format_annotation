@@ -188,6 +188,7 @@ def make_coco_annotations(annids, imgid, bbox, person, keypoints, maxvals):
         bbox2 = [x1, y1, w, h]
         annids += 1
         
+        maxvals = np.around(maxvals, decimals=2)
         if is_person == True:
             _keypoint = keypoints[k_loop].astype(np.int32).ravel().tolist()
             k_loop += 1
