@@ -173,25 +173,29 @@ def make_coco_image(imgid, fn, height, width):
     return [temp]
 
 
-def make_coco_annotations(annids, imgid, bbox, person, keypoints, maxvals):
+#def make_coco_annotations(annids, imgid, bbox, person, keypoints, maxvals):
+def make_coco_annotations(annids, bbox, person, keypoints, maxvals):
     ret = list()
-    k_loop = 0
+    person_loop = 0
     for b_p, is_person in zip(bbox, person):
         
         cat = int(b_p["category_id"])
+        #if b_p["score"] < 0.55 or cat != 0:
         if b_p["score"] < 0.55:
             continue
+        imgid = b_p["image_id"]
         bbox = b_p["bbox"]
+        
         x1, y1 = bbox[0], bbox[1]
         #y1, x1 = int(bbox[1] - bbox[3] / 2), int(bbox[0] - bbox[2] / 2)
         w, h = bbox[2], bbox[3]
         bbox2 = [x1, y1, w, h]
         annids += 1
         
-        maxvals = np.around(maxvals, decimals=2)
         if is_person == True:
-            _keypoint = keypoints[k_loop].astype(np.int32).ravel().tolist()
-            k_loop += 1
+            _keypoint = keypoints[person_loop].astype(np.int32).ravel().tolist()
+            maxvals = np.around(maxvals, decimals=2)
+            person_loop += 1
             d = dict(id=annids, image_id=imgid, bbox=bbox2, \
                      keypoints=_keypoint, category_id=cat, iscrowd=0, keyscore=maxvals[:, :, 0].tolist())
         else:
@@ -202,9 +206,8 @@ def make_coco_annotations(annids, imgid, bbox, person, keypoints, maxvals):
 
 
 def make_coco_annotations_bbox(annids, imgid, bbox):
+
     ret = list()
-    k_loop = 0
-    #for b_p, is_person in zip(bbox, person):
     for b_p in bbox:
         
         cat = int(b_p["category_id"])
