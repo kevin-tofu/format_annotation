@@ -1,10 +1,11 @@
-"""
+'''
 @author: Kohei Watanabe
 @contact: koheitech001[at]gmail.com
-"""
+'''
 
 import os
 import json
+import datetime
 import numpy as np
 
 
@@ -31,9 +32,9 @@ def find_file2(base_path, dir_list, imgname):
 
 
 def openimg2coco_row(row, imshape, id_img, id_annotation, id_cat):
-    """
+    '''
     #['segmentation', 'area', 'iscrowd', 'image_id', 'bbox', 'category_id', 'id']
-    """
+    '''
     x1 = int(float(row['XMin']) * imshape[0])
     y1 = int(float(row['YMin']) * imshape[1])
     x2 = int(float(row['XMax']) * imshape[0])
@@ -50,7 +51,6 @@ def openimg2coco_row(row, imshape, id_img, id_annotation, id_cat):
            'category_id' : int(id_cat), 
            'id' : int(id_annotation)}
 
-    #print(ret)
     return ret
 
 
@@ -108,14 +108,14 @@ def get_license_coco():
     
 def make_coco_categories(path_coco2017_val):
 
-    #path_coco2017_val = "/data/public_data/COCO2017/annotations/instances_val2017.json"
+    #path_coco2017_val = '/data/public_data/COCO2017/annotations/instances_val2017.json'
     anns_list_coco2017_val = json.load(open(path_coco2017_val, 'r'))
-    return anns_list_coco2017_val["categories"]
+    return anns_list_coco2017_val['categories']
 
 
 def make_coco_images(path_root, fname_list):
-    """
-    """
+    '''
+    '''
 
     from skimage import io
 
@@ -128,7 +128,7 @@ def make_coco_images(path_root, fname_list):
         try:
             img = io.imread(path)
         except OSError as e:
-            print("Exception Raised", e)
+            print('Exception Raised', e)
             continue
 
         coco_image += make_coco_image(imgid, fname, img.shape[0], img.shape[1])
@@ -138,53 +138,59 @@ def make_coco_images(path_root, fname_list):
 
 
 def get_images_coco(path_root, coco_image):
-    """
-    """
+    '''
+    '''
 
     from skimage import io
     image_list = list()
     for ci in coco_image:
 
-        path = path_root + ci["file_name"]
+        path = path_root + ci['file_name']
         try:
             img = io.imread(path)
         except OSError as e:
-            print("Exception Raised", e)
+            print('Exception Raised', e)
             continue
 
         image_list.append(img)
 
     return image_list
 
+def make_coco_info(dataset_name, contributor, url='', version='1.0'):
+    
+    data_now = datetime.datetime.now()
+    info = {'description': dataset_name, 'url': url, 
+            'version': version, 'year': data_now.year, 'contributor': 'COCO Consortium', 
+            'date_created': str(data_now.date())}
+    return info
 
 def make_coco_image(imgid, fn, height, width):
     
     temp = {
-        "license": 4,
-        "file_name": fn,
-        "height": height,
-        "width": width,
-        "id": imgid,
-        #"date_captured": "2013-11-14 17:02:52",
-        #"flickr_url": "http://farm7.staticflickr.com/6116/6255196340_da26cf2c9e_z.jpg",
-        #"coco_url": "http://images.cocodataset.org/val2017/000000397133.jpg"
+        'license': 4,
+        'file_name': fn,
+        'height': height,
+        'width': width,
+        'id': imgid,
+        #'date_captured': '2013-11-14 17:02:52',
+        #'flickr_url': 'http://farm7.staticflickr.com/6116/6255196340_da26cf2c9e_z.jpg',
+        #'coco_url': 'http://images.cocodataset.org/val2017/000000397133.jpg'
     }
     
     return [temp]
 
 
-#def make_coco_annotations(annids, imgid, bbox, person, keypoints, maxvals):
 def make_coco_annotations(annids, bbox, person, keypoints, maxvals):
     ret = list()
     person_loop = 0
     for b_p, is_person in zip(bbox, person):
         
-        cat = int(b_p["category_id"])
-        #if b_p["score"] < 0.55 or cat != 0:
-        if b_p["score"] < 0.55:
+        cat = int(b_p['category_id'])
+        #if b_p['score'] < 0.55 or cat != 0:
+        if b_p['score'] < 0.55:
             continue
-        imgid = b_p["image_id"]
-        bbox = b_p["bbox"]
+        imgid = b_p['image_id']
+        bbox = b_p['bbox']
         
         x1, y1 = bbox[0], bbox[1]
         #y1, x1 = int(bbox[1] - bbox[3] / 2), int(bbox[0] - bbox[2] / 2)
@@ -210,10 +216,10 @@ def make_coco_annotations_bbox(annids, imgid, bbox):
     ret = list()
     for b_p in bbox:
         
-        cat = int(b_p["category_id"])
-        if b_p["score"] < 0.55:
+        cat = int(b_p['category_id'])
+        if b_p['score'] < 0.55:
             continue
-        bbox = b_p["bbox"]
+        bbox = b_p['bbox']
         x1, y1 = bbox[0], bbox[1]
         #y1, x1 = int(bbox[1] - bbox[3] / 2), int(bbox[0] - bbox[2] / 2)
         w, h = bbox[2], bbox[3]
@@ -224,3 +230,41 @@ def make_coco_annotations_bbox(annids, imgid, bbox):
         ret.append(d)
 
     return ret
+
+
+def make_coco_annotations_key(bbox, person, keypoints, maxvals):
+    """
+    """
+
+    keypoint_list = list()
+    person_loop = 0
+    maxvals = np.around(maxvals, decimals=2) #maxvals = np.zeros((nr_img, num_keypoints, 1))
+    for b_p, is_person in zip(bbox, person):
+        
+        cat = int(b_p['category_id'])
+        #print("cat", cat)
+        if b_p['score'] < 0.55 or cat != 1:
+            continue
+
+        bbox_id = b_p['id']
+        imgid_temp = b_p['image_id']
+        bbox_temp = b_p['bbox']
+        
+        if is_person == True:
+
+            
+            _keypoint = keypoints[person_loop].astype(np.int32).ravel().tolist()
+            _keyscore = maxvals[person_loop, :, 0].tolist()
+
+            #print(keypoints[person_loop, :, 2])
+            _num_keypoints = keypoints[person_loop][keypoints[person_loop, :, 2] > 0].shape[0]
+            #print(_num_keypoints)
+            person_loop += 1
+            
+            d = dict(id=bbox_id, image_id=imgid_temp, bbox=bbox_temp, \
+                     keypoints=_keypoint, category_id=cat, iscrowd=0, \
+                     keyscore=_keyscore, num_keypoints=_num_keypoints)
+
+            keypoint_list.append(d)
+
+    return keypoint_list
