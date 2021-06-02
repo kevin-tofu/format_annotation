@@ -217,8 +217,9 @@ def make_coco_annotations_bbox(annids, imgid, bbox):
     for b_p in bbox:
         
         cat = int(b_p['category_id'])
-        if b_p['score'] < 0.55:
-            continue
+        #if b_p['score'] < 0.55:
+        #    continue
+
         bbox = b_p['bbox']
         x1, y1 = bbox[0], bbox[1]
         #y1, x1 = int(bbox[1] - bbox[3] / 2), int(bbox[0] - bbox[2] / 2)
@@ -243,9 +244,11 @@ def make_coco_annotations_key(bbox, person, keypoints, maxvals):
         
         cat = int(b_p['category_id'])
         #print("cat", cat)
-        if b_p['score'] < 0.55 or cat != 1:
+        #if b_p['score'] < 0.55 or cat != 1:
+        if cat != 1:
             continue
-
+        
+            
         bbox_id = b_p['id']
         imgid_temp = b_p['image_id']
         bbox_temp = b_p['bbox']
