@@ -9,6 +9,14 @@ import datetime
 import numpy as np
 
 
+def find_file0(base_path, imgname):
+    ret_find = False
+    path_img = base_path + imgname
+    if os.path.exists(path_img):
+        ret_find = True
+        
+    return ret_find, path_img, imgname
+    
 def find_file(base_path, dir_list, imgname):
 
     ret_find = False
