@@ -218,11 +218,17 @@ def make_coco_annotations(annids, bbox, person, keypoints, maxvals):
 
     return ret
 
+def make_coco_annotations_bbox_base(annids, imgid, x1, y1, w, h, \ 
+                                    catid, iscrowd):
+    
+    bbox = [x1, y1, w, h]
+    d = dict(id=annids, image_id=imgid, bbox=bbox, category_id=catid, iscrowd=iscrowd)
+    return d
 
-def make_coco_annotations_bbox(annids, imgid, bbox):
+def make_coco_annotations_bbox(annids, imgid, bboxes, iscrowd=0):
 
     ret = list()
-    for b_p in bbox:
+    for b_p in bboxes:
         
         cat = int(b_p['category_id'])
         #if b_p['score'] < 0.55:
