@@ -227,8 +227,7 @@ def make_coco_categories_base(supercat, catid, catname):
     return d
 
 
-def make_coco_annotations_bbox_base(annids, imgid, x1, y1, w, h, \ 
-                                    catid, iscrowd):
+def make_coco_annotations_bbox_base(annids, imgid, x1, y1, w, h, catid, iscrowd):
     
     bbox = [x1, y1, w, h]
     d = dict(id=annids, image_id=imgid, bbox=bbox, category_id=catid, iscrowd=iscrowd)
