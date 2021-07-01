@@ -218,6 +218,13 @@ def make_coco_annotations(annids, bbox, person, keypoints, maxvals):
 
     return ret
 
+def make_annotation_fname(sect, name):
+
+    #sec = "train"
+    #sec = "val"
+
+    return "instances_" + sect + name + ".json"
+
 def make_coco_categories_base(supercat, catid, catname):
     """
     #{"supercategory": "person", "id": 1, "name": "person"}
