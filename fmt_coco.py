@@ -218,6 +218,15 @@ def make_coco_annotations(annids, bbox, person, keypoints, maxvals):
 
     return ret
 
+def make_coco_categories_base(supercat, catid, catname):
+    """
+    #{"supercategory": "person", "id": 1, "name": "person"}
+    """
+
+    d = dict(supercategory=supercat, id=catid, name=catname)
+    return d
+
+
 def make_coco_annotations_bbox_base(annids, imgid, x1, y1, w, h, \ 
                                     catid, iscrowd):
     
