@@ -299,3 +299,16 @@ def make_coco_annotations_key(bbox, person, keypoints, maxvals):
             keypoint_list.append(d)
 
     return keypoint_list
+
+
+def make_coco_category(supercategory, id, name, keypoint=None, skeleton=None):
+
+    ret = [{
+            "supercategory": supercategory,
+            "id": id,
+            "name": name,
+            "keypoints": keypoint,
+            "skeleton": skeleton
+    }]
+
+    return ret
