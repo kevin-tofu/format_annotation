@@ -53,6 +53,37 @@ def get_pairs(anns, idx: int=0):
     return pairs, keypoint_name
     
 
+def colored_pairs(keypoints_name, pairs, regex_list):
+    """
+    """
+    import re
+    parisList = list()
+    for i in range(len(regex_list) + 1):
+        parisList.append(list())
+
+    # regex_list = ['.*[lL][eE][fF][tT].*']
+    # print(pairs)
+    # print(keypoints_name, len(keypoints_name))
+    for p in pairs:
+        print(p[0] - 1, p[1] - 1)
+        key1 = keypoints_name[p[0] - 1]
+        key2 = keypoints_name[p[1] - 1]
+        
+        count_NotMatched = 0
+        for i_regex, regex in enumerate(regex_list):
+
+            # print(key1, key2, bool(re.match(regex, key1)) and bool(re.match(regex, key2)))
+            if bool(re.match(regex, key1)) and bool(re.match(regex, key2)):
+                # print("matched")
+                parisList[i_regex].append(p)
+            else:
+                count_NotMatched += 1
+        if count_NotMatched == len(regex_list):
+            parisList[-1].append(p)
+
+    return parisList
+
+
 def draw_keypoint2img(img, labels, pairs, color = [255, 0, 0], th=0.5):
 
     ret = np.copy(img)
