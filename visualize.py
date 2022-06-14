@@ -65,7 +65,7 @@ def colored_pairs(keypoints_name, pairs, regex_list):
     # print(pairs)
     # print(keypoints_name, len(keypoints_name))
     for p in pairs:
-        print(p[0] - 1, p[1] - 1)
+        # print(p[0] - 1, p[1] - 1)
         key1 = keypoints_name[p[0] - 1]
         key2 = keypoints_name[p[1] - 1]
         
